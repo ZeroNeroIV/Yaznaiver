@@ -9,6 +9,9 @@
         <module name="Authentication" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Fetching" target="23" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
