@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -18,13 +18,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final UserAccountRepository userAccountRepository;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> userAccountRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Didn't find user :("));
-        ;
+    public CustomUserDetailsService userDetailsService() {
+        return customUserDetailsService;
     }
 
     @Bean
@@ -52,7 +50,7 @@ public class WebSecurityConfiguration {
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider val = new DaoAuthenticationProvider();
         val.setPasswordEncoder(new BCryptPasswordEncoder(10));
-        val.setUserDetailsService(userAccountService);
+        val.setUserDetailsService(userDetailsService());
         return val;
     }
 }

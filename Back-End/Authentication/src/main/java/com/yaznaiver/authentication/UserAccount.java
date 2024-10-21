@@ -11,49 +11,39 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+@Getter
 @Entity
 @Table
 public class UserAccount implements UserDetails {
     @Setter
-    @Getter
     @Id
     private Long nationalId;
     @Setter
-    @Getter
     @Column(nullable = false)
     private String firstName;
     @Setter
-    @Getter
     @Column(nullable = false)
     private String secondName;
     @Setter
-    @Getter
     @Column(nullable = false)
     private String thirdName;
     @Setter
-    @Getter
     @Column(nullable = false)
     private String lastName;
-    @Getter
     @Column(nullable = false)
     private String username;
     @Setter
-    @Getter
     @Column(nullable = false)
     private String email;
     @Setter
-    @Getter
     @Column(nullable = false)
     private String password;
     @Setter
-    @Getter
     @Column(nullable = false)
     private LocalDateTime lastLogin;
-    @Getter
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdAt;
-    @Getter
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
