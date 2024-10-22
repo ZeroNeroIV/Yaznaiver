@@ -70,6 +70,9 @@ public class UserAccount implements UserDetails {
         this.birthDate = birthDate;
     }
 
+    public UserAccount() {
+    }
+
 
     @PostPersist
     private void postPersist() {
