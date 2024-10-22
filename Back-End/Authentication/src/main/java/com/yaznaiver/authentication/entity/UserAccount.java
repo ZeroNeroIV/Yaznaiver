@@ -1,6 +1,9 @@
-package com.yaznaiver.authentication;
+package com.yaznaiver.authentication.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -38,6 +41,8 @@ public class UserAccount implements UserDetails {
     @Setter
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
+    private LocalDateTime birthDate;
     @Setter
     @Column(nullable = false)
     private LocalDateTime lastLogin;
@@ -46,6 +51,24 @@ public class UserAccount implements UserDetails {
     private LocalDateTime createdAt;
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    public UserAccount(@NotNull Long id,
+                       @NotBlank String firstName,
+                       @NotBlank String secondName,
+                       @NotBlank String thirdName,
+                       @NotBlank String lastName,
+                       @NotNull @Email String email,
+                       String encodedPassword,
+                       @NotNull LocalDateTime birthDate) {
+        this.nationalId = id;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.thirdName = thirdName;
+        this.lastName = lastName;
+        this.password = encodedPassword;
+        this.email = email;
+        this.birthDate = birthDate;
+    }
 
 
     @PostPersist

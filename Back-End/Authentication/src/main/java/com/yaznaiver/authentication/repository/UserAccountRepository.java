@@ -1,5 +1,6 @@
-package com.yaznaiver.authentication;
+package com.yaznaiver.authentication.repository;
 
+import com.yaznaiver.authentication.entity.UserAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

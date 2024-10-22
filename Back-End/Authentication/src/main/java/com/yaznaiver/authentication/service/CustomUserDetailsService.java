@@ -1,5 +1,7 @@
-package com.yaznaiver.authentication;
+package com.yaznaiver.authentication.service;
 
+import com.yaznaiver.authentication.entity.UserAccount;
+import com.yaznaiver.authentication.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

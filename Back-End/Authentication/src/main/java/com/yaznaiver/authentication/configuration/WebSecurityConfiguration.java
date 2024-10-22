@@ -1,5 +1,7 @@
-package com.yaznaiver.authentication;
+package com.yaznaiver.authentication.configuration;
 
+import com.yaznaiver.authentication.filter.JwtAuthenticationFilter;
+import com.yaznaiver.authentication.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

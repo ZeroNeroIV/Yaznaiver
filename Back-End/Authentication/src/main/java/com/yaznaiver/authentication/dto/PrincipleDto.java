@@ -1,4 +1,4 @@
-package com.yaznaiver.authentication;
+package com.yaznaiver.authentication.dto;
 
 import lombok.Data;
 
