@@ -1,9 +1,11 @@
 package com.yaznaiver.authentication.utility;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yaznaiver.authentication.entity.UserAccount;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class JwtUtility {
@@ -46,19 +50,26 @@ public class JwtUtility {
     // PUBLIC
 
     //# Access Token
-    public String generateAccessToken(@NotNull UserAccount userAccount) {
+    public String generateAccessToken(@NotNull UserAccount userAccount) throws JsonProcessingException {
         return generateToken(userAccount, "access");
     }
 
     //# Refresh Token
 
-    public String generateRefreshToken(@NotNull UserAccount userAccount) {
+    public String generateRefreshToken(@NotNull UserAccount userAccount) throws JsonProcessingException {
         return generateToken(userAccount, "refresh");
     }
 
     // PRIVATE
 
-    private String generateToken(@NotNull UserAccount userAccount, @NotBlank String type) {
+    private String generateToken(@NotNull UserAccount userAccount, @NotBlank String type) throws JsonProcessingException {
+        Map<String, String> subject = new HashMap<>();
+        subject.put("username", userAccount.getUsername());
+        subject.put("email", userAccount.getEmail());
+
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonSubjectString = mapper.writeValueAsString(subject);
+
         return Jwts.builder()
                 .signWith(type.equals("access")
                         ? accessTokenSecretSigningKey()
@@ -67,7 +78,7 @@ public class JwtUtility {
                 .expiration(new Date(System.currentTimeMillis() + (type.equals("access")
                         ? accessTokenExp
                         : refreshTokenExp)))
-                .subject(userAccount.getUsername())
+                .subject(jsonSubjectString)
                 .id(userAccount.getNationalId().toString())
                 .compact();
     }
@@ -89,7 +100,7 @@ public class JwtUtility {
         return extractUserAccountId(token, "access");
     }
 
-    public String getUsernameFromAccessToken(@NotBlank String token) {
+    public String getUsernameFromAccessToken(@NotBlank String token) throws JsonProcessingException {
         return extractUsername(token, "access");
     }
 
@@ -107,7 +118,7 @@ public class JwtUtility {
         return extractUserAccountId(token, "refresh");
     }
 
-    public String getUsernameFromRefreshToken(@NotBlank String token) {
+    public String getUsernameFromRefreshToken(@NotBlank String token) throws JsonProcessingException {
         return extractUsername(token, "refresh");
     }
 
@@ -125,18 +136,39 @@ public class JwtUtility {
         return Long.valueOf(extractClaims(token, type).getId());
     }
 
-    private String extractUsername(@NotBlank String token, @NotBlank String type) {
-        return extractClaims(token, type).getSubject();
+    private String extractUsername(@NotBlank String token, @NotBlank String type) throws JsonProcessingException {
+        return (String) extractSubject(token, type).get("username");
+    }
+
+    private String extractEmail(@NotBlank String token, @NotBlank String type) throws JsonProcessingException {
+        return (String) extractSubject(token, type).get("email");
+    }
+
+    private HashMap<?, ?> extractSubject(@NotBlank String token, @NotBlank String type) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(extractClaims(token, type).getSubject(), HashMap.class);
     }
 
     private Claims extractClaims(@NotBlank String token, @NotBlank String type) {
-        return Jwts.parser()
-                .verifyWith(type.equals("access")
-                        ? accessTokenSecretSigningKey()
-                        : refreshTokenSecretSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            return Jwts.parser()
+                    .verifyWith(type.equals("access")
+                            ? accessTokenSecretSigningKey()
+                            : refreshTokenSecretSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (SignatureException e) {
+            throw new SignatureException("Invalid signature", e);
+        } catch (MalformedJwtException e) {
+            throw new MalformedJwtException("Invalid JWT token formatting", e);
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredJwtException(null, null, "Expired JWT token: ", e);
+        } catch (UnsupportedJwtException e) {
+            throw new UnsupportedJwtException("Unsupported JWT token: ", e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("JWT claims string is missing", e);
+        }
     }
 
     /// ======================================================================================

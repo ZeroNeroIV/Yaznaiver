@@ -1,5 +1,6 @@
 package com.yaznaiver.authentication.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yaznaiver.authentication.dto.signInDto;
 import com.yaznaiver.authentication.entity.RefreshToken;
 import com.yaznaiver.authentication.entity.UserAccount;
@@ -11,7 +12,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +52,7 @@ public class UserAccountService {
         }
     }
 
-    public Map<String, Object> signIn(signInDto signInDto) {
+    public Map<String, Object> signIn(signInDto signInDto) throws JsonProcessingException {
         UserAccount userAccount = userAccountRepository
                 .findByEmail(signInDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));

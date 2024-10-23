@@ -1,5 +1,6 @@
 package com.yaznaiver.authentication.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yaznaiver.authentication.dto.signInDto;
 import com.yaznaiver.authentication.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class SignInController {
     private final UserAccountService userAccountService;
 
     @PostMapping("/sign-in")
-    public ResponseEntity<Map<String, Object>> signIn(@RequestBody signInDto signInDto) {
+    public ResponseEntity<Map<String, Object>> signIn(@RequestBody signInDto signInDto) throws JsonProcessingException {
         return ResponseEntity.ok().body(userAccountService.signIn(signInDto));
     }
 }
