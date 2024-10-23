@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/api/v1/auth")
+@RestController("/api/v1/auth/sign-up")
 @RequiredArgsConstructor
 public class SignUpController {
     private final UserAccountService userAccountService;
 
-    @PostMapping("/sign-up")
+    @PostMapping
     public ResponseEntity<?> signUp(@RequestBody signUpDto signUpDto) throws SignUpException {
         UserAccount userAccount = userAccountService.createUserAccount(
                 signUpDto.getNationalId(),

@@ -3,14 +3,17 @@ package com.yaznaiver.authentication.filter;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 public class NationalIdPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    protected NationalIdPasswordAuthenticationFilter(String defaultFilterProcessesUrl) {
-        super(defaultFilterProcessesUrl);
+
+    public NationalIdPasswordAuthenticationFilter(RequestMatcher requiresAuthenticationRequestMatcher, AuthenticationManager authenticationManager) {
+        super(requiresAuthenticationRequestMatcher, authenticationManager);
     }
 
     protected String obtainNationalId(HttpServletRequest request) {

@@ -23,9 +23,9 @@ public class JwtUtility {
     @Value("spring.security.refresh-token.secret-key")
     private String refreshTokenSecretKey;
     @Value("spring.security.access-token.expiration-time")
-    private Long accessTokenExp;
+    private String accessTokenExp;
     @Value("spring.security.refresh-token.expiration-time")
-    private Long refreshTokenExp;
+    private String refreshTokenExp;
 
     /// ======================================================================================
     //! Secret Signing Keys
@@ -76,8 +76,8 @@ public class JwtUtility {
                         : refreshTokenSecretSigningKey())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + (type.equals("access")
-                        ? accessTokenExp
-                        : refreshTokenExp)))
+                        ? Long.valueOf(accessTokenExp)
+                        : Long.valueOf(refreshTokenExp))))
                 .subject(jsonSubjectString)
                 .id(userAccount.getNationalId().toString())
                 .compact();
@@ -176,19 +176,22 @@ public class JwtUtility {
     // PUBLIC
 
     //# Access Token
-    public Boolean isAccessTokenValid(@NotBlank String token, @NotNull UserAccount userAccount) {
+    public Boolean isAccessTokenValid(@NotBlank String token, @NotNull UserAccount userAccount)
+            throws JsonProcessingException {
         return isTokenValid(token, userAccount, "access");
     }
 
     //# Refresh Token
 
-    public Boolean isRefreshTokenValid(@NotBlank String token, @NotNull UserAccount userAccount) {
+    public Boolean isRefreshTokenValid(@NotBlank String token, @NotNull UserAccount userAccount)
+            throws JsonProcessingException {
         return isTokenValid(token, userAccount, "refresh");
     }
 
     // PRIVATE
 
-    private Boolean isTokenValid(@NotBlank String token, @NotNull UserAccount userAccount, @NotBlank String type) {
+    private Boolean isTokenValid(@NotBlank String token, @NotNull UserAccount userAccount, @NotBlank String type)
+            throws JsonProcessingException {
         String username = extractUsername(token, type);
         return !isTokenExpired(token, type) && username.equals(userAccount.getUsername());
     }

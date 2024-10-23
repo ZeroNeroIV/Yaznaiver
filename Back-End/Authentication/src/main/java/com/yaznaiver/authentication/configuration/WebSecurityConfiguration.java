@@ -1,6 +1,7 @@
 package com.yaznaiver.authentication.configuration;
 
 import com.yaznaiver.authentication.filter.JwtAuthenticationFilter;
+import com.yaznaiver.authentication.filter.NationalIdPasswordAuthenticationFilter;
 import com.yaznaiver.authentication.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,19 +20,21 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfiguration {
+    private final CustomUserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CustomUserDetailsService customUserDetailsService;
+
+    // TODO:
+    @Bean
+    public NationalIdPasswordAuthenticationFilter nationalIdPasswordAuthenticationFilter() {
+        return new NationalIdPasswordAuthenticationFilter(null, null);
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
-    }
-
-    @Bean
-    public CustomUserDetailsService userDetailsService() {
-        return customUserDetailsService;
     }
 
     @Bean
@@ -40,11 +44,12 @@ public class WebSecurityConfiguration {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/v1/auth/login",
-                                "/api/v1auth/account-verification",
+                                "/api/v1/auth/account-verification/**",
                                 "/api/v1/auth/sign-up").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(nationalIdPasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
@@ -58,7 +63,7 @@ public class WebSecurityConfiguration {
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider val = new DaoAuthenticationProvider();
         val.setPasswordEncoder(new BCryptPasswordEncoder(10));
-        val.setUserDetailsService(userDetailsService());
+        val.setUserDetailsService(userDetailsService);
         return val;
     }
 }

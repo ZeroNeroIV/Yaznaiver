@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-@RestController("/api/v1/auth")
+@RestController("/api/v1/auth/sign-in")
 @RequiredArgsConstructor
 public class SignInController {
     private final UserAccountService userAccountService;
 
-    @PostMapping("/sign-in")
+    @PostMapping
     public ResponseEntity<Map<String, Object>> signIn(@RequestBody signInDto signInDto) throws JsonProcessingException {
         return ResponseEntity.ok().body(userAccountService.signIn(signInDto));
     }
