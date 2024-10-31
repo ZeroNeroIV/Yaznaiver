@@ -1,0 +1,87 @@
+# Define the UserAccount type
+type UserAccount {
+    nationalId: ID!
+    firstName: String!
+    secondName: String!
+    thirdName: String!
+    lastName: String!
+    username: String!
+    email: String!
+    birthDate: String!
+    enabled: Boolean!
+}
+
+# Define the RefreshToken type
+type RefreshToken {
+    id: ID!
+    userAccount: UserAccount!
+    refreshToken: String!
+}
+
+# Define the Device type
+type Device {
+    id: ID!
+    userAccount: UserAccount!
+    userAgent: String!
+    ipAddress: String!
+    deviceType: String!
+}
+
+# Define the AccountVerificationCode type
+type AccountVerificationCode {
+    id: ID!
+    code: String!
+    userAccount: UserAccount!
+    expiresAt: String!
+}
+
+# Define the Query type (for fetching data)
+type Query {
+    getUserAccountByNationalId(nationalId: ID!): UserAccount
+    getUserAccountByEmail(email: String!): UserAccount
+    getAccountVerificationCodeByEmail(email: String!): AccountVerificationCode
+    getRefreshTokenByEmail(email: String!): RefreshToken
+}
+
+# Define the Mutation type (for modifying data)
+type Mutation {
+    # Create Device.java new user
+    createUser(
+        nationalId: Int!,
+        firstName: String!,
+        secondName: String!,
+        thirdName: String!,
+        lastName: String!,
+        email: String!,
+        password: String!,
+        birthDate: String!
+    ): UserAccount
+
+    # Update user's email
+    updateUserEmail(
+        nationalId: ID!,
+        newEmail: String!
+    ): UserAccount
+
+    # Update user's password
+    updateUserPassword(
+        nationalId: ID!,
+        newPassword: String!
+    ): UserAccount
+
+    sendOtp(
+    # Send OTP using the AccountVerificationCode class
+        userId: ID!
+    ): AccountVerificationCode
+
+    # Delete Device.java user account
+    deleteUser(
+        nationalId: ID!
+    ): String
+}
+
+# Define the main Schema entry point
+schema {
+    query: Query
+    mutation: Mutation
+}

@@ -32,7 +32,7 @@ public class UserAccountService {
                                          @NotBlank String secondName,
                                          @NotBlank String thirdName,
                                          @NotBlank String lastName,
-                                         @NotNull LocalDateTime birthDate,
+                                         @NotBlank String birthDate,
                                          @NotNull @Email String email,
                                          @NotBlank String password
     ) throws SignUpException {

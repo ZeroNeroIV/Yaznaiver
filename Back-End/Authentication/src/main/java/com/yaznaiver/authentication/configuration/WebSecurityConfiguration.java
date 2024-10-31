@@ -28,8 +28,8 @@ public class WebSecurityConfiguration {
 
     // TODO:
     @Bean
-    public NationalIdPasswordAuthenticationFilter nationalIdPasswordAuthenticationFilter() {
-        return new NationalIdPasswordAuthenticationFilter(null, null);
+    public NationalIdPasswordAuthenticationFilter nationalIdPasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
+        return new NationalIdPasswordAuthenticationFilter("/api/v1/auth/sign-in", authenticationManager);
     }
 
     @Bean
@@ -38,7 +38,7 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
@@ -49,7 +49,7 @@ public class WebSecurityConfiguration {
                         .anyRequest().authenticated())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(nationalIdPasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(nationalIdPasswordAuthenticationFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // Retrieving National ID from access token either ways if the token is expired or not
                 Long nationalId = jwtUtility.getUserAccountIdFromAccessToken(token);
 
-                // If the access token is expired, check if there is a valid refresh token, if not then halt.
+                // If the access token is expired, check if there is Device.java valid refresh token, if not then halt.
                 if (jwtUtility.isAccessTokenExpired(token)) {
                     return;
                 }

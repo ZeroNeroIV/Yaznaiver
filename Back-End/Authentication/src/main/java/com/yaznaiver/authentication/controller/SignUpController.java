@@ -5,27 +5,36 @@ import com.yaznaiver.authentication.entity.UserAccount;
 import com.yaznaiver.authentication.exception.SignUpException;
 import com.yaznaiver.authentication.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.Arguments;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
 
-@RestController("/api/v1/auth/sign-up")
+@Controller
 @RequiredArgsConstructor
 public class SignUpController {
     private final UserAccountService userAccountService;
 
-    @PostMapping
-    public ResponseEntity<?> signUp(@RequestBody signUpDto signUpDto) throws SignUpException {
+    @MutationMapping(name = "createUser")
+    public ResponseEntity<UserAccount> signUp(
+            @Argument Long nationalId,
+            @Argument String firstName,
+            @Argument String secondName,
+            @Argument String thirdName,
+            @Argument String lastName,
+            @Argument String email,
+            @Argument String password,
+            @Argument String birthDate) throws SignUpException {
         UserAccount userAccount = userAccountService.createUserAccount(
-                signUpDto.getNationalId(),
-                signUpDto.getFirstName(),
-                signUpDto.getSecondName(),
-                signUpDto.getThirdName(),
-                signUpDto.getLastName(),
-                signUpDto.getBirthday(),
-                signUpDto.getEmail(),
-                signUpDto.getPassword()
+                nationalId,
+                firstName,
+                secondName,
+                thirdName,
+                lastName,
+                birthDate,
+                email,
+                password
         );
         return ResponseEntity.ok(userAccount);
     }

@@ -3,6 +3,8 @@ package com.yaznaiver.authentication.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Table
 @Entity
 @Data
@@ -14,4 +16,6 @@ public class AccountVerificationCode {
     private String code;
     @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.PERSIST)
     private UserAccount userAccount;
+    @Column(nullable = false)
+    private LocalDateTime expiresAt;
 }
