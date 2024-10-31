@@ -43,6 +43,8 @@ type AccountVerificationCode {
 
 # Define the Query type (for fetching data)
 type Query {
+    signOut: Boolean
+    verifyAccount(code: String!): Boolean
     getUserAccountByEmail(email: String!): UserAccount
     getRefreshTokenByEmail(email: String!): RefreshToken
     getUserAccountByNationalId(nationalId: ID!): UserAccount
@@ -62,7 +64,7 @@ type Mutation {
         birthDate: String!
     ): UserAccount
 
-    logIn(
+    signIn(
         email: String!
         password: String!
     ): Token

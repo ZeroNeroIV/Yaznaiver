@@ -1,5 +1,6 @@
 package com.yaznaiver.authentication.service;
 
+import com.yaznaiver.authentication.exception.UserAccountNotFoundException;
 import com.yaznaiver.authentication.repository.RefreshTokenRepository;
 import com.yaznaiver.authentication.utility.JwtUtility;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,11 @@ public class SignOutService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     public void signOut(String accessToken) {
-        Long nationalId = jwtUtility.getUserAccountIdFromAccessToken(accessToken);
-        refreshTokenRepository.deleteByUserAccountNationalId(nationalId);
+        try {
+            Long nationalId = jwtUtility.getUserAccountIdFromAccessToken(accessToken);
+            refreshTokenRepository.deleteByUserAccountNationalId(nationalId);
+        } catch (Exception e) {
+            throw new UserAccountNotFoundException();
+        }
     }
 }

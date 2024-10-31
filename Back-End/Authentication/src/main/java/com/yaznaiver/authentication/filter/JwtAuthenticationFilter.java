@@ -1,8 +1,8 @@
 package com.yaznaiver.authentication.filter;
 
-import com.yaznaiver.authentication.dto.PrincipleDto;
 import com.yaznaiver.authentication.entity.UserAccount;
-import com.yaznaiver.authentication.service.CustomUserDetailsService;
+import com.yaznaiver.authentication.exception.UserAccountNotFoundException;
+import com.yaznaiver.authentication.repository.UserAccountRepository;
 import com.yaznaiver.authentication.utility.JwtUtility;
 import io.micrometer.common.lang.NonNullApi;
 import jakarta.servlet.FilterChain;
@@ -23,7 +23,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtility jwtUtility;
-    private final CustomUserDetailsService userDetailsService;
+    private final UserAccountRepository userAccountRepository;
 
     @Override
     protected void doFilterInternal(
@@ -45,22 +45,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     return;
                 }
 
-
                 if (nationalId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserAccount userAccount = userDetailsService.loadUserByNationalId(nationalId);
-                    NationalIdPasswordAuthenticationToken authenticationToken = new NationalIdPasswordAuthenticationToken(
-                            new PrincipleDto(userAccount.getUsername(), userAccount.getEmail()),
-                            null,
-                            userAccount.getAuthorities()
-                    );
+                    UserAccount userAccount = userAccountRepository.findById(nationalId)
+                            .orElseThrow(UserAccountNotFoundException::new);
+                    NationalIdPasswordAuthenticationToken authenticationToken =
+                            new NationalIdPasswordAuthenticationToken(
+                                    userAccount.getNationalId(),
+                                    null,
+                                    userAccount.getAuthorities()
+                            );
 
                     authenticationToken.setDetails(
-                            new WebAuthenticationDetailsSource()
-                                    .buildDetails
-                                            (request)
-                    );
+                            new WebAuthenticationDetailsSource().buildDetails(request));
 
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    SecurityContextHolder
+                            .getContext()
+                            .setAuthentication(authenticationToken);
                 }
             } catch (Exception e) {
                 SecurityContextHolder.clearContext();

@@ -2,7 +2,6 @@ package com.yaznaiver.authentication.configuration;
 
 import com.yaznaiver.authentication.filter.JwtAuthenticationFilter;
 import com.yaznaiver.authentication.filter.NationalIdPasswordAuthenticationFilter;
-import com.yaznaiver.authentication.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,13 +22,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfiguration {
-    private final CustomUserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     // TODO:
     @Bean
     public NationalIdPasswordAuthenticationFilter nationalIdPasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
-        return new NationalIdPasswordAuthenticationFilter("/api/v1/auth/sign-in", authenticationManager);
+        return new NationalIdPasswordAuthenticationFilter("/graphql", authenticationManager);
     }
 
     @Bean
@@ -43,9 +41,7 @@ public class WebSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/v1/auth/login",
-                                "/api/v1/auth/account-verification/**",
-                                "/api/v1/auth/sign-up").permitAll()
+                        .requestMatchers("/graphql").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -63,7 +59,6 @@ public class WebSecurityConfiguration {
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider val = new DaoAuthenticationProvider();
         val.setPasswordEncoder(new BCryptPasswordEncoder(10));
-        val.setUserDetailsService(userDetailsService);
         return val;
     }
 }

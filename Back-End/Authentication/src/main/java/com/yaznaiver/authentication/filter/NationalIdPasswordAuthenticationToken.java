@@ -16,6 +16,7 @@ public class NationalIdPasswordAuthenticationToken extends AbstractAuthenticatio
         this.credentials = credentials;
         this.setAuthenticated(false);
     }
+
     public NationalIdPasswordAuthenticationToken(Object principal,
                                                  Object credentials,
                                                  Collection<? extends GrantedAuthority> authorities) {

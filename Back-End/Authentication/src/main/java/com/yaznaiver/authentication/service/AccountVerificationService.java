@@ -1,9 +1,7 @@
 package com.yaznaiver.authentication.service;
 
-import com.yaznaiver.authentication.dto.AccountVerificationCodeDto;
 import com.yaznaiver.authentication.entity.AccountVerificationCode;
 import com.yaznaiver.authentication.entity.UserAccount;
-import com.yaznaiver.authentication.exception.AccountVerificationCodeNotFoundException;
 import com.yaznaiver.authentication.repository.AccountVerificationRepository;
 import com.yaznaiver.authentication.repository.UserAccountRepository;
 import jakarta.validation.constraints.NotNull;
@@ -57,9 +55,9 @@ public class AccountVerificationService {
         );
     }
 
-    public Boolean isCodeCorrect(@NotNull AccountVerificationCodeDto verificationDto) {
+    public Boolean verify(String verificationDto) {
         AccountVerificationCode userVerificationCode = verificationRepository
-                .findByAccountVerificationCode(verificationDto.getCode())
+                .findByAccountVerificationCode(verificationDto)
                 .orElseThrow(() -> new RuntimeException("No user found!"));
         if (userVerificationCode.getExpiresAt().isAfter(LocalDateTime.now())) {
             userAccountRepository.enableUserAccountByNationalId(

@@ -15,7 +15,7 @@ public class SignUpController {
     private final SignUpService signUpService;
 
     @MutationMapping(name = "createUser")
-    public ResponseEntity<UserAccount> signUp(
+    public UserAccount signUp(
             @Argument Long nationalId,
             @Argument String firstName,
             @Argument String secondName,
@@ -24,7 +24,7 @@ public class SignUpController {
             @Argument String email,
             @Argument String password,
             @Argument String birthDate) throws SignUpException {
-        UserAccount userAccount = signUpService.createUserAccount(
+        return signUpService.createUserAccount(
                 nationalId,
                 firstName,
                 secondName,
@@ -34,6 +34,5 @@ public class SignUpController {
                 email,
                 password
         );
-        return ResponseEntity.ok(userAccount);
     }
 }

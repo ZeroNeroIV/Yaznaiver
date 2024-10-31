@@ -1,22 +1,18 @@
 package com.yaznaiver.authentication.controller;
 
-import com.yaznaiver.authentication.exception.AccountVerificationCodeNotFoundException;
 import com.yaznaiver.authentication.service.AccountVerificationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
+@Controller
 @RequiredArgsConstructor
-@RestController("/api/v1/auth/account-verification")
 public class AccountVerificationController {
     private final AccountVerificationService accountVerificationService;
 
-    @PostMapping("/verify")
-    public ResponseEntity<String> accountVerificationCode(@RequestParam("verificationCode") String verificationCode)
-            throws AccountVerificationCodeNotFoundException {
-        accountVerificationService.accountVerificationCode(verificationCode);
-        return ResponseEntity.ok().body("Account verification code has been verified");
+    @QueryMapping(name = "verifyAccount")
+    public Boolean accountVerificationCode(@Argument String code) {
+        return accountVerificationService.verify(code);
     }
 }

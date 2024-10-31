@@ -16,11 +16,11 @@ import java.util.Map;
 public class SignInController {
     private final SignInService signInService;
 
-    @MutationMapping(name = "logIn")
-    public ResponseEntity<Map<String, Object>> signIn(
+    @MutationMapping(name = "signIn")
+    public Map<String, Object> signIn(
             @Argument String email,
             @Argument String password
     ) throws JsonProcessingException, WrongEmailOrPasswordException {
-        return ResponseEntity.ok().body(signInService.signIn(email, password));
+        return signInService.signIn(email, password);
     }
 }
