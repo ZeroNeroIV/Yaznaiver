@@ -11,6 +11,12 @@ type UserAccount {
     enabled: Boolean!
 }
 
+# Define the Token type
+type Token {
+    refreshToken: String!
+    accessToken: String!
+}
+
 # Define the RefreshToken type
 type RefreshToken {
     id: ID!
@@ -31,21 +37,20 @@ type Device {
 type AccountVerificationCode {
     id: ID!
     code: String!
-    userAccount: UserAccount!
     expiresAt: String!
+    userAccount: UserAccount!
 }
 
 # Define the Query type (for fetching data)
 type Query {
-    getUserAccountByNationalId(nationalId: ID!): UserAccount
     getUserAccountByEmail(email: String!): UserAccount
-    getAccountVerificationCodeByEmail(email: String!): AccountVerificationCode
     getRefreshTokenByEmail(email: String!): RefreshToken
+    getUserAccountByNationalId(nationalId: ID!): UserAccount
 }
 
 # Define the Mutation type (for modifying data)
 type Mutation {
-    # Create Device.java new user
+    # Creating new user
     createUser(
         nationalId: Int!,
         firstName: String!,
@@ -56,6 +61,11 @@ type Mutation {
         password: String!,
         birthDate: String!
     ): UserAccount
+
+    logIn(
+        email: String!
+        password: String!
+    ): Token
 
     # Update user's email
     updateUserEmail(
@@ -69,15 +79,15 @@ type Mutation {
         newPassword: String!
     ): UserAccount
 
+    # Send OTP using user's national ID
     sendOtp(
-    # Send OTP using the AccountVerificationCode class
         userId: ID!
     ): AccountVerificationCode
 
-    # Delete Device.java user account
+    # Delete user's account
     deleteUser(
         nationalId: ID!
-    ): String
+    ): Boolean
 }
 
 # Define the main Schema entry point

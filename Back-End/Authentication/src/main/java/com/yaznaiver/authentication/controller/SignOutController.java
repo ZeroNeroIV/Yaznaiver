@@ -1,6 +1,6 @@
 package com.yaznaiver.authentication.controller;
 
-import com.yaznaiver.authentication.service.UserAccountService;
+import com.yaznaiver.authentication.service.SignOutService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController("/api/v1/auth/sign-out")
 public class SignOutController {
-    private final UserAccountService userAccountService;
+    private final SignOutService signOutService;
 
     @GetMapping
     public ResponseEntity<String> signOut(@RequestHeader("Authorization") String bearerToken) {
         String accessToken = bearerToken.replace("Bearer ", "");
-        userAccountService.signOut(accessToken);
+        signOutService.signOut(accessToken);
         return ResponseEntity.ok().build();
     }
 }

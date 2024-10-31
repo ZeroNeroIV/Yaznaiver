@@ -2,6 +2,7 @@ package com.yaznaiver.authentication.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.LocalDateTime;
 
@@ -18,4 +19,9 @@ public class AccountVerificationCode {
     private UserAccount userAccount;
     @Column(nullable = false)
     private LocalDateTime expiresAt;
+
+    @PrePersist
+    void prePersist() {
+        expiresAt = LocalDateTime.now().plusMinutes(10);
+    }
 }

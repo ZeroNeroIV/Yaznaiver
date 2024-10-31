@@ -22,27 +22,39 @@ public class AccountVerificationService {
     private final EmailService emailService;
     private final UserAccountRepository userAccountRepository;
 
-    public void sendVerificationEmail(@NotNull UserAccount user) {
-        String verificationCode = generateVerificationCode();
-
-        AccountVerificationCode newVerification = new AccountVerificationCode();
-
+    private AccountVerificationCode process(UserAccount user, int digits) {
         UserAccount userAccount =
                 userAccountRepository.findById(user.getNationalId())
                         .orElseThrow(() -> new IllegalArgumentException("No user such found!"));
 
+        String verificationCode = generateVerificationCode(digits);
+
+        AccountVerificationCode newVerification = new AccountVerificationCode();
         newVerification.setUserAccount(userAccount);
         newVerification.setCode(verificationCode);
 
-        // 10 minutes
-        newVerification.setExpiresAt(LocalDateTime.now().plusMinutes(10));
+        return newVerification;
+    }
 
+    public void sendVerificationEmail(@NotNull UserAccount user) {
+        AccountVerificationCode newVerification = process(user, 6);
         verificationRepository.save(newVerification);
 
         emailService.verificationEmailSender(
                 user.getEmail(),
                 "Verification Code",
-                verificationCode);
+                newVerification.getCode());
+    }
+
+    public void sendOTP(@NotNull UserAccount user) {
+        AccountVerificationCode newVerification = process(user, 4);
+        verificationRepository.save(newVerification);
+
+        emailService.verificationEmailSender(
+                user.getEmail(),
+                "OTP" + newVerification.getCode(),
+                newVerification.getCode()
+        );
     }
 
     public Boolean isCodeCorrect(@NotNull AccountVerificationCodeDto verificationDto) {
@@ -52,19 +64,18 @@ public class AccountVerificationService {
         if (userVerificationCode.getExpiresAt().isAfter(LocalDateTime.now())) {
             userAccountRepository.enableUserAccountByNationalId(
                     userVerificationCode.getUserAccount().getNationalId());
-            verificationRepository.deleteBy
+            verificationRepository.deleteById
                     (userVerificationCode.getUserAccount().getNationalId());
             return true;
-        }
-        else if (userVerificationCode.getExpiresAt().isBefore(LocalDateTime.now())) {
+        } else if (userVerificationCode.getExpiresAt().isBefore(LocalDateTime.now())) {
             verificationRepository.delete(userVerificationCode);
         }
         return false;
     }
 
-    private String generateVerificationCode() {
+    private String generateVerificationCode(int digits) {
         Random rand = new Random();
-        Integer randomInteger = rand.nextInt(90000000) + 10000000;
+        Integer randomInteger = rand.nextInt(9 * (int) Math.pow(10, digits)) + (int) Math.pow(10, digits);
         return String.valueOf(randomInteger);
     }
 }

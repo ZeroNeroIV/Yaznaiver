@@ -1,12 +1,10 @@
 package com.yaznaiver.authentication.controller;
 
-import com.yaznaiver.authentication.dto.signUpDto;
 import com.yaznaiver.authentication.entity.UserAccount;
 import com.yaznaiver.authentication.exception.SignUpException;
-import com.yaznaiver.authentication.service.UserAccountService;
+import com.yaznaiver.authentication.service.SignUpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.Arguments;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,7 +12,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequiredArgsConstructor
 public class SignUpController {
-    private final UserAccountService userAccountService;
+    private final SignUpService signUpService;
 
     @MutationMapping(name = "createUser")
     public ResponseEntity<UserAccount> signUp(
@@ -26,7 +24,7 @@ public class SignUpController {
             @Argument String email,
             @Argument String password,
             @Argument String birthDate) throws SignUpException {
-        UserAccount userAccount = userAccountService.createUserAccount(
+        UserAccount userAccount = signUpService.createUserAccount(
                 nationalId,
                 firstName,
                 secondName,

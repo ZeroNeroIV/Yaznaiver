@@ -64,7 +64,7 @@ public class UserAccount implements UserDetails {
                        @NotBlank String lastName,
                        @NotNull @Email String email,
                        String encodedPassword,
-                       @NotNull LocalDateTime birthDate) {
+                       @NotNull LocalDate birthDate) {
         this.nationalId = id;
         this.firstName = firstName;
         this.secondName = secondName;
