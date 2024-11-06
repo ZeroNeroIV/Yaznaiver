@@ -12,6 +12,9 @@ public class RefreshToken {
     private int id;
     @ManyToOne
     private UserAccount userAccount;
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "device_id")
+    private Device device;
     @Column(nullable = false, unique = true)
     private String refreshToken;
 }

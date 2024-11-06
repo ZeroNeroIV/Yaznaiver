@@ -5,11 +5,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table
+@NoArgsConstructor
 public class UserAccount implements UserDetails {
     @Setter
     @Id
@@ -42,7 +45,7 @@ public class UserAccount implements UserDetails {
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
     @Setter
     @Column(nullable = false)
     private LocalDateTime lastLogin;
@@ -51,6 +54,8 @@ public class UserAccount implements UserDetails {
     private LocalDateTime createdAt;
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+    @Column(nullable = false)
+    private Boolean enabled;
 
     public UserAccount(@NotNull Long id,
                        @NotBlank String firstName,
@@ -59,7 +64,7 @@ public class UserAccount implements UserDetails {
                        @NotBlank String lastName,
                        @NotNull @Email String email,
                        String encodedPassword,
-                       @NotNull LocalDateTime birthDate) {
+                       @NotNull LocalDate birthDate) {
         this.nationalId = id;
         this.firstName = firstName;
         this.secondName = secondName;
@@ -69,10 +74,6 @@ public class UserAccount implements UserDetails {
         this.email = email;
         this.birthDate = birthDate;
     }
-
-    public UserAccount() {
-    }
-
 
     @PostPersist
     private void postPersist() {
@@ -92,5 +93,10 @@ public class UserAccount implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 }

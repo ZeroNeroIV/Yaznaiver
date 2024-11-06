@@ -1,26 +1,21 @@
 package com.yaznaiver.authentication.controller;
 
-import com.yaznaiver.authentication.exception.SignUpException;
-import com.yaznaiver.authentication.exception.WrongEmailOrPasswordException;
-import org.springframework.http.ResponseEntity;
+import graphql.GraphQLError;
+import graphql.GraphqlErrorBuilder;
+import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler;
+import org.springframework.graphql.execution.ErrorType;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-//    @ExceptionHandler(WrongEmailOrPasswordException.class)
-//    public ResponseEntity<String> wrongEmailOrPasswordExceptionHandler(Exception e) {
-//        return ResponseEntity.badRequest().body("Error type: " + e.getMessage());
-//    }
-//
-//    @ExceptionHandler(SignUpException.class)
-//    public ResponseEntity<String> signUpExceptionHandler(Exception e) {
-//        return ResponseEntity.badRequest().body("Error type: " + e.getMessage());
-//    }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> generalExceptionHandler(Exception e) {
-        return ResponseEntity.badRequest().body("Error type: " + e.getMessage());
+    @GraphQlExceptionHandler
+    public GraphQLError generalExceptionHandler(Exception e) {
+        return GraphqlErrorBuilder
+                .newError()
+                .message(e.getMessage())
+                .errorType(ErrorType.INTERNAL_ERROR)
+                .build();
     }
 
 }

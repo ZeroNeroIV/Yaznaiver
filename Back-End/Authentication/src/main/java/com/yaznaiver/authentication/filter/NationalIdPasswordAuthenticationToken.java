@@ -16,6 +16,7 @@ public class NationalIdPasswordAuthenticationToken extends AbstractAuthenticatio
         this.credentials = credentials;
         this.setAuthenticated(false);
     }
+
     public NationalIdPasswordAuthenticationToken(Object principal,
                                                  Object credentials,
                                                  Collection<? extends GrantedAuthority> authorities) {
@@ -34,7 +35,7 @@ public class NationalIdPasswordAuthenticationToken extends AbstractAuthenticatio
     }
 
     public void setAuthenticated(boolean authenticated) throws IllegalArgumentException {
-        Assert.isTrue(!authenticated, "Cannot set this token to trusted - use constructor which takes a GrantedAuthority list instead");
+        Assert.isTrue(!authenticated, "Cannot set this token to trusted - use constructor which takes Device.java GrantedAuthority list instead");
         super.setAuthenticated(false);
     }
 

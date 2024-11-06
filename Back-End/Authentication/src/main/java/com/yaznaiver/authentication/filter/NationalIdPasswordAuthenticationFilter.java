@@ -11,9 +11,8 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 public class NationalIdPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-
-    public NationalIdPasswordAuthenticationFilter(RequestMatcher requiresAuthenticationRequestMatcher, AuthenticationManager authenticationManager) {
-        super(requiresAuthenticationRequestMatcher, authenticationManager);
+    public NationalIdPasswordAuthenticationFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager) {
+        super(defaultFilterProcessesUrl, authenticationManager);
     }
 
     protected String obtainNationalId(HttpServletRequest request) {
