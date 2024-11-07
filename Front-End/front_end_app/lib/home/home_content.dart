@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'home_upcoming_appointments.dart';
 import 'home_content_welcome.dart';
-import 'home_quick_actions.dart';
+import 'home_quick_menu.dart';
 
 class HomeContant extends StatelessWidget {
   const HomeContant() : super(key: const Key('HomeContent'));
@@ -14,7 +14,7 @@ class HomeContant extends StatelessWidget {
       children: [
         HomeContentWelcome(),
         SizedBox(height: 20),
-        HomeQuickActions(),
+        HomeQuickMenu(),
         SizedBox(height: 20),
         HomeUpcomingAppointments(),
       ],

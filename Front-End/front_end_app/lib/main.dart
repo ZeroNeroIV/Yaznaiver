@@ -25,7 +25,7 @@ class Yaznaiver extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/ai-assistant': (context) => const AiAssistantPage(),
-        '/appointment': (context) => const AppointmentPage(),
+        '/appointment': (context) => const AppointmentBookingPage(),
         '/drug-store': (context) => const DrugStorePage(),
         '/': (context) => const HomePage(),
         '/lab-results': (context) => const LabResultsPage(),

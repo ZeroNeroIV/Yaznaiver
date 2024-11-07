@@ -38,13 +38,14 @@ class HomeUpcomingAppointments extends StatelessWidget {
                   Text(
                     'Dr. Khalid Al-Zoubi',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
                     'General Check-up',
                     style: TextStyle(
+                      fontSize: 12,
                       color: Colors.grey,
                     ),
                   ),
@@ -53,6 +54,7 @@ class HomeUpcomingAppointments extends StatelessWidget {
               Text(
                 'November 15, 2025',
                 style: TextStyle(
+                  fontSize: 12,
                   color: Colors.green,
                   fontWeight: FontWeight.bold,
                 ),

@@ -1,6 +1,6 @@
 {
-    "name": "front_end_app",
-    "short_name": "front_end_app",
+    "name": "myapp",
+    "short_name": "myapp",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

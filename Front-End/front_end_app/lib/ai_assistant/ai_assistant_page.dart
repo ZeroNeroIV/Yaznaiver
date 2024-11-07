@@ -24,6 +24,7 @@ class _AiAssistantPageState extends State<AiAssistantPage> {
         ),
       );
     });
+    // TODO: AI assistant logic here
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         _messages.insert(
@@ -39,21 +40,27 @@ class _AiAssistantPageState extends State<AiAssistantPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            reverse: true,
-            itemCount: _messages.length,
-            itemBuilder: (context, index) => _messages[index],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('AI Assistant'),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              reverse: true,
+              itemCount: _messages.length,
+              itemBuilder: (context, index) => _messages[index],
+            ),
           ),
-        ),
-        const Divider(height: 1.0),
-        Container(
-          decoration: BoxDecoration(color: Theme.of(context).cardColor),
-          child: _buildTextComposer(),
-        ),
-      ],
+          const Divider(height: 1.0),
+          Container(
+            decoration: BoxDecoration(color: Theme.of(context).cardColor),
+            child: _buildTextComposer(),
+          ),
+        ],
+      ),
     );
   }
 
