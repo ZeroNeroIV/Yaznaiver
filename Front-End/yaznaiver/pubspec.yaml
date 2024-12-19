@@ -1,0 +1,62 @@
+name: "yaznaiver"
+description: "Our innovative healthcare application is designed to enhance patient care and streamline medical processes."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations: 
+    sdk: flutter
+  table_calendar: ^3.1.2
+  intl: ^0.19.0
+  cupertino_icons: ^1.0.6
+  http: ^1.2.2
+  supabase_flutter: ^2.8.0
+  flutter_local_notifications: ^18.0.1
+  image_picker: ^1.1.2
+  translator: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.1
+
+flutter:
+
+  generate: true
+
+  uses-material-design: true
+
+  assets:
+    - assets/icons/
+    - assets/images/
+
+  fonts:
+    - family: Sequel
+      fonts:
+        - asset: assets/fonts/Sequel-Regular.ttf
+    - family: Cornerstone
+      fonts:
+        - asset: assets/fonts/Cornerstone.ttf
+    - family: Noir
+      fonts:
+        - asset: assets/fonts/Noir_regular.otf
+          style: normal
+          weight: 400
+        - asset: assets/fonts/Noir_medium.otf
+          style: normal
+          weight: 500
+
+flutter_launcher_icons:
+  android: true
+  image_path: "assets/images/yaznaiver-black.png"
+  adaptive_icon_foreground: "assets/images/yaznaiver-black.png"
+  adaptive_icon_background: "#efefef"
+  min_sdk_android: 12

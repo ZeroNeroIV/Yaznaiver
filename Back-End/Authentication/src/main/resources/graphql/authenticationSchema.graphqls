@@ -1,0 +1,99 @@
+# Define the UserAccount type
+type UserAccount {
+    nationalId: ID!
+    firstName: String!
+    secondName: String!
+    thirdName: String!
+    lastName: String!
+    username: String!
+    email: String!
+    birthDate: String!
+    enabled: Boolean!
+}
+
+# Define the Token type
+type Token {
+    refreshToken: String!
+    accessToken: String!
+}
+
+# Define the RefreshToken type
+type RefreshToken {
+    id: ID!
+    userAccount: UserAccount!
+    refreshToken: String!
+}
+
+# Define the Device type
+type Device {
+    id: ID!
+    userAccount: UserAccount!
+    userAgent: String!
+    ipAddress: String!
+    deviceType: String!
+}
+
+# Define the AccountVerificationCode type
+type AccountVerificationCode {
+    id: ID!
+    code: String!
+    expiresAt: String!
+    userAccount: UserAccount!
+}
+
+# Define the Query type (for fetching data)
+type Query {
+    signOut: Boolean
+    verifyAccount(code: String!): Boolean
+    getUserAccountByEmail(email: String!): UserAccount
+    getRefreshTokenByEmail(email: String!): RefreshToken
+    getUserAccountByNationalId(nationalId: ID!): UserAccount
+}
+
+# Define the Mutation type (for modifying data)
+type Mutation {
+    # Creating new user
+    createUser(
+        nationalId: Int!,
+        firstName: String!,
+        secondName: String!,
+        thirdName: String!,
+        lastName: String!,
+        email: String!,
+        password: String!,
+        birthDate: String!
+    ): UserAccount
+
+    signIn(
+        email: String!
+        password: String!
+    ): Token
+
+    # Update user's email
+    updateUserEmail(
+        nationalId: ID!,
+        newEmail: String!
+    ): UserAccount
+
+    # Update user's password
+    updateUserPassword(
+        nationalId: ID!,
+        newPassword: String!
+    ): UserAccount
+
+    # Send OTP using user's national ID
+    sendOtp(
+        userId: ID!
+    ): AccountVerificationCode
+
+    # Delete user's account
+    deleteUser(
+        nationalId: ID!
+    ): Boolean
+}
+
+# Define the main Schema entry point
+schema {
+    query: Query
+    mutation: Mutation
+}
