@@ -1,0 +1,15 @@
+id 
+brand_name
+generic_name
+active_ingredient
+inactive_ingredient
+indications_and_usage or purpose
+warnings
+adverse_reactions
+dosage_and_administration
+manufacturer_name
+storage_and_handling
+product_ndc
+route
+do_not_use
+______________________________________
